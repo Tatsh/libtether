@@ -86,7 +86,8 @@ CFBundleRef CFBundleCreate(CFAllocatorRef allocator, CFURLRef bundleURL);
 void *CFBundleGetFunctionPointerForName(CFBundleRef bundle, CFStringRef functionName);
 
 CFRunLoopRef CFRunLoopGetCurrent(void);
-SInt32 CFRunLoopRunInMode(CFRunLoopMode mode, CFTimeInterval seconds, Boolean returnAfterSourceHandled);
+SInt32
+CFRunLoopRunInMode(CFRunLoopMode mode, CFTimeInterval seconds, Boolean returnAfterSourceHandled);
 void CFRunLoopStop(CFRunLoopRef rl);
 
 #endif // FAKE_COREFOUNDATION_H
