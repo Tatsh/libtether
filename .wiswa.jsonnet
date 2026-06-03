@@ -2,7 +2,7 @@
   uses_user_defaults: true,
   project_type: 'c',
   project_name: 'libtether',
-  version: '0.0.0',
+  version: '0.0.1',
   security_policy_supported_versions: { '0.0.x': ':white_check_mark:' },
   description: 'Tools and a C library to attach and detach macOS disk images, replicating hdiutil via the private DiskImages framework and DiskArbitration.',
   keywords: ['dmg', 'disk image', 'diskarbitration', 'diskimages', 'hdiutil', 'macos'],

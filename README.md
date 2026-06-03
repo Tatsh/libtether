@@ -5,7 +5,7 @@
 [![C](https://img.shields.io/badge/C-00599C?logo=c)](<https://en.wikipedia.org/wiki/C_(programming_language)>)
 [![GitHub tag (with filter)](https://img.shields.io/github/v/tag/Tatsh/libtether)](https://github.com/Tatsh/libtether/tags)
 [![License](https://img.shields.io/github/license/Tatsh/libtether)](https://github.com/Tatsh/libtether/blob/master/LICENSE.txt)
-[![GitHub commits since latest release (by SemVer including pre-releases)](https://img.shields.io/github/commits-since/Tatsh/libtether/v0.0.0/master)](https://github.com/Tatsh/libtether/compare/v0.0.0...master)
+[![GitHub commits since latest release (by SemVer including pre-releases)](https://img.shields.io/github/commits-since/Tatsh/libtether/v0.0.1/master)](https://github.com/Tatsh/libtether/compare/v0.0.1...master)
 [![CodeQL](https://github.com/Tatsh/libtether/actions/workflows/codeql.yml/badge.svg)](https://github.com/Tatsh/libtether/actions/workflows/codeql.yml)
 [![Tests](https://github.com/Tatsh/libtether/actions/workflows/tests.yml/badge.svg)](https://github.com/Tatsh/libtether/actions/workflows/tests.yml)
 [![Coverage Status](https://coveralls.io/repos/github/Tatsh/libtether/badge.svg?branch=master)](https://coveralls.io/github/Tatsh/libtether?branch=master)

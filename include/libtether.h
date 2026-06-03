@@ -20,7 +20,7 @@ extern "C" {
 #endif
 
 /** @brief libtether version string (semver). */
-#define LIBTETHER_VERSION "0.0.0"
+#define LIBTETHER_VERSION "0.0.1"
 
 /**
  * @brief Options controlling how teth_attach() mounts an image.
