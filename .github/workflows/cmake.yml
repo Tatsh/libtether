@@ -1,0 +1,51 @@
+jobs:
+  build:
+    runs-on: '${{ matrix.arch.runner }}'
+    steps:
+      - uses: 'actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10'
+        with:
+          persist-credentials: false
+      - name: 'Configure'
+        run: 'cmake -S . -B build -DBUILD_TOOLS=ON -DCMAKE_BUILD_TYPE=Release -DCPACK_SYSTEM_NAME=${{ matrix.arch.cpack_system }}'
+      - name: 'Build'
+        run: 'cmake --build build --config Release'
+      - name: 'Package'
+        run: 'cmake --build build --config Release --target package'
+      - name: 'Upload artifacts'
+        uses: 'actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02'
+        with:
+          if-no-files-found: 'error'
+          name: 'libtether-${{ matrix.arch.name }}'
+          path: 'build/*.zip'
+    strategy:
+      fail-fast: false
+      matrix:
+        arch:
+          - cpack_system: 'x86_64'
+            name: 'x86_64'
+            runner: 'macos-13'
+          - cpack_system: 'arm64'
+            name: 'arm64'
+            runner: 'macos-latest'
+name: 'CMake'
+'on':
+  pull_request:
+    branches:
+      - 'master'
+    paths:
+      - '.github/workflows/cmake.yml'
+      - 'CMakeLists.txt'
+      - 'include/**'
+      - 'src/**'
+      - 'tools/**'
+  push:
+    branches:
+      - 'master'
+    paths:
+      - '.github/workflows/cmake.yml'
+      - 'CMakeLists.txt'
+      - 'include/**'
+      - 'src/**'
+      - 'tools/**'
+permissions:
+  contents: 'read'

@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-project(tether C)
+project(tether VERSION 0.0.0 LANGUAGES C)
 
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_STANDARD_REQUIRED ON)
@@ -29,6 +29,13 @@ if(APPLE)
     if(BUILD_TOOLS)
         add_subdirectory(tools)
     endif()
+
+    # Packaging: the `package` target (or `cpack`) produces a downloadable ZIP of the installed
+    # library, header, and tools. CI sets CPACK_SYSTEM_NAME per architecture (x86_64, arm64).
+    set(CPACK_GENERATOR "ZIP")
+    set(CPACK_PACKAGE_NAME "libtether")
+    set(CPACK_VERBATIM_VARIABLES ON)
+    include(CPack)
 endif()
 
 # The tests build on any platform.

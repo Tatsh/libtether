@@ -10,6 +10,8 @@
   // The tests are C/cmocka, not the Python suite wiswa would scaffold; tests.yml is maintained by
   // hand in this project.
   want_tests: false,
+  // No WinGet publishing; this is a macOS-only project.
+  want_winget: false,
   clang_format_args: 'include/*.h src/*.c tools/*.c tests/*.c tests/*.h',
   vcpkg+: {
     dependencies+: ['cmocka'],

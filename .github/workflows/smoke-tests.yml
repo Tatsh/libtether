@@ -1,0 +1,54 @@
+jobs:
+  smoke:
+    runs-on: '${{ matrix.os }}'
+    steps:
+      - uses: 'actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10'
+        with:
+          persist-credentials: false
+      - name: 'Build the tools'
+        run: |
+          cmake -S . -B build -DBUILD_TOOLS=ON -DCMAKE_BUILD_TYPE=Release
+          cmake --build build
+      - name: 'Create a test disk image'
+        run: 'hdiutil create -size 16m -fs HFS+ -volname TetherSmoke -ov /tmp/tether-smoke.dmg'
+      - name: 'Attach with attach-dmg'
+        run: |
+          set -eux
+          ./build/tools/attach-dmg /tmp/tether-smoke.dmg
+          test -d /Volumes/TetherSmoke
+      - name: 'Detach with detach-dmg'
+        run: |
+          set -eux
+          ./build/tools/detach-dmg /Volumes/TetherSmoke
+          if [ -d /Volumes/TetherSmoke ]; then
+            echo 'TetherSmoke is still mounted after detach' >&2
+            exit 1
+          fi
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - 'macos-13'
+          - 'macos-latest'
+name: 'Smoke tests'
+'on':
+  pull_request:
+    branches:
+      - 'master'
+    paths:
+      - '.github/workflows/smoke-tests.yml'
+      - 'CMakeLists.txt'
+      - 'include/**'
+      - 'src/**'
+      - 'tools/**'
+  push:
+    branches:
+      - 'master'
+    paths:
+      - '.github/workflows/smoke-tests.yml'
+      - 'CMakeLists.txt'
+      - 'include/**'
+      - 'src/**'
+      - 'tools/**'
+permissions:
+  contents: 'read'
