@@ -7,7 +7,13 @@
   description: 'Tools and a C library to attach and detach macOS disk images, replicating hdiutil via the private DiskImages framework and DiskArbitration.',
   keywords: ['dmg', 'disk image', 'diskarbitration', 'diskimages', 'hdiutil', 'macos'],
   want_main: false,
-  clang_format_args: 'include/*.h src/*.c tools/*.c',
+  // The tests are C/cmocka, not the Python suite wiswa would scaffold; tests.yml is maintained by
+  // hand in this project.
+  want_tests: false,
+  clang_format_args: 'include/*.h src/*.c tools/*.c tests/*.c tests/*.h',
+  vcpkg+: {
+    dependencies+: ['cmocka'],
+  },
   vscode+: {
     c_cpp+: {
       configurations: [
