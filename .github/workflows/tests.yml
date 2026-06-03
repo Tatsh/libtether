@@ -1,4 +1,28 @@
 jobs:
+  coverage:
+    runs-on: 'ubuntu-latest'
+    steps:
+      - uses: 'actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10'
+        with:
+          persist-credentials: false
+      - name: 'Install cmocka and lcov'
+        run: 'sudo apt-get update && sudo apt-get install --no-install-recommends -y lcov libcmocka-dev'
+      - name: 'Configure'
+        run: 'cmake -S . -B build -DBUILD_TESTS=ON -DENABLE_COVERAGE=ON -DCMAKE_C_COMPILER=gcc'
+      - name: 'Build'
+        run: 'cmake --build build'
+      - name: 'Test'
+        run: 'ctest --test-dir build --output-on-failure'
+      - name: 'Capture coverage'
+        run: |
+          lcov --capture --directory build --output-file coverage.lcov --ignore-errors mismatch,unused
+          lcov --remove coverage.lcov '/usr/*' '*/tests/*' --output-file coverage.lcov --ignore-errors unused
+      - name: 'Coveralls'
+        uses: 'coverallsapp/github-action@5cbfd81b66ca5d10c19b062c04de0199c215fb6e'
+        with:
+          file: 'coverage.lcov'
+          format: 'lcov'
+          github-token: '${{ secrets.GITHUB_TOKEN }}'
   test:
     runs-on: 'ubuntu-latest'
     steps:

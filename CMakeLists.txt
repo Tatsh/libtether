@@ -13,6 +13,8 @@ option(BUILD_TOOLS "Build the attach-dmg and detach-dmg command-line tools" OFF)
 # The tests mock the macOS frameworks with cmocka, so they build and run on any platform with
 # GCC or Clang; enable them with -DBUILD_TESTS=ON.
 option(BUILD_TESTS "Build the mocked unit tests" OFF)
+# Instrument the tests with --coverage (gcov) for Coveralls reporting in CI.
+option(ENABLE_COVERAGE "Build the tests with coverage instrumentation" OFF)
 
 # ---------------------------------------------------------------------------
 # Platform guard: the library and tools use macOS frameworks (DiskArbitration, CoreFoundation,
