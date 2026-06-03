@@ -8,9 +8,12 @@ cfurlposix
 cmocka
 cooldown
 coveragerc
-coverallsapp
+cpack
+ctest
 dashcam
 dbuild
+dcmake
+dcpack
 deinitialize
 dihl
 diskarbitration
@@ -32,6 +35,7 @@ jsonnet
 jsonschema
 lckd
 libc
+libcmocka
 libera
 libsecurity
 libsonnet
@@ -42,13 +46,11 @@ mypy
 ndif
 noverify
 oneline
-pavelzw
 preapproved
 proc
 pyinstaller
 pylock
 pyproject
-pytest
 rdisk
 readwrite
 reflow
@@ -68,9 +70,9 @@ udvare
 undraft
 undrafted
 unparseable
-vedantmgoyal
 vendored
 venv
+volname
 wextra
 winget
 wiswa
