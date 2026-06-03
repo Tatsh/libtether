@@ -172,7 +172,7 @@ cleanup_disk:
     if (disk) {
         CFRelease(disk);
     }
-cleanup_session:
+cleanup_session: // LCOV_EXCL_LINE - bare goto label, generates no executable code
     DASessionUnscheduleFromRunLoop(session, CFRunLoopGetCurrent(), kCFRunLoopDefaultMode);
     CFRelease(session);
     return rc;
