@@ -9,9 +9,13 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [unreleased]
 
-## [0.0.1] - 2026-00-00
+## [0.0.1] - 2026-06-03
 
-First version.
+### Added
 
-[unreleased]: https://github.com/Tatsh/golem/compare/v0.0.0...HEAD
-[0.0.1]: https://github.com/Tatsh/golem/releases/tag/v0.0.0
+- `libtether`, a C library that attaches and detaches macOS disk images, replicating
+  `hdiutil attach` and `hdiutil detach` via the private DiskImages framework and DiskArbitration.
+- `attach-dmg` and `detach-dmg` command-line tools, built with `-DBUILD_TOOLS=ON`.
+
+[unreleased]: https://github.com/Tatsh/libtether/compare/v0.0.1...HEAD
+[0.0.1]: https://github.com/Tatsh/libtether/releases/tag/v0.0.1
