@@ -9,6 +9,7 @@
 //
 #include "diskimages_private.h"
 
+#include <stdbool.h>
 #include <stddef.h>
 #include <string.h>
 
@@ -22,7 +23,7 @@ static CFBundleRef create_diskimages_bundle(void) {
     // FVDIHLInterface.cpp.
     CFBundleRef bundle = CFBundleGetBundleWithIdentifier(DISKIMAGES_BUNDLE_ID);
     if (bundle != NULL) {
-        CFRetain(bundle); // GetBundleWithIdentifier returns a non-owned ref
+        CFRetain(bundle); // GetBundleWithIdentifier returns a non-owned ref.
         return bundle;
     }
 
