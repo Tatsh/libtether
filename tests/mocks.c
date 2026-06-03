@@ -1,6 +1,7 @@
 // cmocka __wrap_ implementations of the CoreFoundation, DiskArbitration, and statfs functions the
-// libtether sources call, plus definitions of the CoreFoundation data symbols (which cannot be
-// wrapped). The CMake test target adds -Wl,--wrap for each function below.
+// libtether sources call, plus the CoreFoundation data symbols (which cannot be wrapped). Most
+// behaviour is driven by g_mock (reset per test); the sequenced print-path calls use cmocka
+// will_return(). The CMake test target adds -Wl,--wrap for each function below.
 #include "mocks.h"
 
 #include <string.h>
@@ -17,7 +18,23 @@ const CFDictionaryKeyCallBacks kCFTypeDictionaryKeyCallBacks = {0};
 const CFDictionaryValueCallBacks kCFTypeDictionaryValueCallBacks = {0};
 const CFRunLoopMode kCFRunLoopDefaultMode = (CFRunLoopMode) "kCFRunLoopDefaultMode";
 
-void *g_diskimages_attach_fn = NULL;
+teth_mock_state g_mock;
+
+void teth_mock_reset(void) {
+    memset(&g_mock, 0, sizeof g_mock);
+    g_mock.unmount_fire = 1;
+    g_mock.eject_fire = 1;
+}
+
+// A DiskArbitration callback armed by DADiskUnmount/DADiskEject and delivered by the next
+// CFRunLoopRunInMode, mirroring the real asynchronous behaviour.
+static struct {
+    DADiskUnmountCallback cb;
+    DADiskRef disk;
+    void *ctx;
+    DADissenterRef dissenter;
+    int armed;
+} g_pending;
 
 // --- CoreFoundation -----------------------------------------------------------------------------
 void __wrap_CFRelease(CFTypeRef cf) {
@@ -79,10 +96,10 @@ const void *__wrap_CFArrayGetValueAtIndex(CFArrayRef array, CFIndex idx) {
 Boolean
 __wrap_CFStringGetCString(CFStringRef s, char *buffer, CFIndex bufferSize, CFStringEncoding enc) {
     (void)enc;
-    const char *str = (const char *)s;
-    if (str == NULL || bufferSize <= 0) {
+    if (s == NULL || s == TETH_FAKE_BADSTR || bufferSize <= 0) {
         return 0;
     }
+    const char *str = (const char *)s;
     CFIndex i = 0;
     for (; str[i] != '\0' && i < bufferSize - 1; ++i) {
         buffer[i] = str[i];
@@ -110,25 +127,34 @@ CFURLRef __wrap_CFURLCreateWithFileSystemPath(CFAllocatorRef allocator,
     (void)filePath;
     (void)pathStyle;
     (void)isDirectory;
-    return (CFURLRef)TETH_FAKE_URL;
+    return g_mock.url_null ? NULL : (CFURLRef)TETH_FAKE_URL;
 }
 
 CFBundleRef __wrap_CFBundleGetBundleWithIdentifier(CFStringRef bundleID) {
     (void)bundleID;
-    return mock_ptr_type(CFBundleRef);
+    return (CFBundleRef)g_mock.bundle_by_id;
 }
 
 CFBundleRef __wrap_CFBundleCreate(CFAllocatorRef allocator, CFURLRef bundleURL) {
     (void)allocator;
     (void)bundleURL;
-    return mock_ptr_type(CFBundleRef);
+    return (CFBundleRef)g_mock.bundle_create;
 }
 
 void *__wrap_CFBundleGetFunctionPointerForName(CFBundleRef bundle, CFStringRef functionName) {
     (void)bundle;
     const char *name = (const char *)functionName;
-    if (name != NULL && strcmp(name, "DIHLDiskImageAttach") == 0) {
-        return g_diskimages_attach_fn;
+    if (name == NULL) {
+        return NULL;
+    }
+    if (strcmp(name, "DIHLDiskImageAttach") == 0) {
+        return g_mock.attach_fn;
+    }
+    if (strcmp(name, "DIInitialize") == 0) {
+        return g_mock.init_fn;
+    }
+    if (strcmp(name, "DIDeinitialize") == 0) {
+        return g_mock.deinit_fn;
     }
     return NULL;
 }
@@ -137,12 +163,17 @@ CFRunLoopRef __wrap_CFRunLoopGetCurrent(void) {
     return (CFRunLoopRef)0x5210;
 }
 
-SInt32 __wrap_CFRunLoopRunInMode(CFRunLoopMode mode,
-                                 CFTimeInterval seconds,
-                                 Boolean returnAfterSourceHandled) {
+SInt32 __wrap_CFRunLoopRunInMode(CFRunLoopMode mode, CFTimeInterval seconds, Boolean handled) {
     (void)mode;
     (void)seconds;
-    (void)returnAfterSourceHandled;
+    (void)handled;
+    if (g_pending.armed) {
+        g_pending.armed = 0;
+        if (g_pending.cb != NULL) {
+            g_pending.cb(g_pending.disk, g_pending.dissenter, g_pending.ctx);
+        }
+        return kCFRunLoopRunStopped;
+    }
     return kCFRunLoopRunTimedOut;
 }
 
@@ -153,7 +184,7 @@ void __wrap_CFRunLoopStop(CFRunLoopRef rl) {
 // --- DiskArbitration ----------------------------------------------------------------------------
 DASessionRef __wrap_DASessionCreate(CFAllocatorRef allocator) {
     (void)allocator;
-    return (DASessionRef)TETH_FAKE_SESSION;
+    return g_mock.session_null ? NULL : (DASessionRef)TETH_FAKE_SESSION;
 }
 
 void __wrap_DASessionScheduleWithRunLoop(DASessionRef session,
@@ -177,7 +208,7 @@ __wrap_DADiskCreateFromBSDName(CFAllocatorRef allocator, DASessionRef session, c
     (void)allocator;
     (void)session;
     check_expected(name);
-    return mock_ptr_type(DADiskRef);
+    return g_mock.disk_create_null ? NULL : (DADiskRef)TETH_FAKE_DISK;
 }
 
 DADiskRef __wrap_DADiskCopyWholeDisk(DADiskRef disk) {
@@ -190,8 +221,12 @@ void __wrap_DADiskUnmount(DADiskRef disk,
                           DADiskUnmountCallback callback,
                           void *context) {
     (void)options;
-    if (callback != NULL) {
-        callback(disk, NULL, context); // NULL dissenter == success.
+    if (g_mock.unmount_fire) {
+        g_pending.cb = callback;
+        g_pending.disk = disk;
+        g_pending.ctx = context;
+        g_pending.dissenter = (DADissenterRef)g_mock.unmount_dissenter;
+        g_pending.armed = 1;
     }
 }
 
@@ -200,19 +235,23 @@ void __wrap_DADiskEject(DADiskRef disk,
                         DADiskEjectCallback callback,
                         void *context) {
     (void)options;
-    if (callback != NULL) {
-        callback(disk, NULL, context); // NULL dissenter == success.
+    if (g_mock.eject_fire) {
+        g_pending.cb = callback;
+        g_pending.disk = disk;
+        g_pending.ctx = context;
+        g_pending.dissenter = (DADissenterRef)g_mock.eject_dissenter;
+        g_pending.armed = 1;
     }
 }
 
 DAReturn __wrap_DADissenterGetStatus(DADissenterRef dissenter) {
     (void)dissenter;
-    return mock_type(DAReturn);
+    return g_mock.dissenter_status;
 }
 
 CFStringRef __wrap_DADissenterGetStatusString(DADissenterRef dissenter) {
     (void)dissenter;
-    return mock_ptr_type(CFStringRef);
+    return (CFStringRef)g_mock.dissenter_string;
 }
 
 // --- statfs -------------------------------------------------------------------------------------

@@ -55,7 +55,7 @@ set(under_test
     ${CMAKE_CURRENT_SOURCE_DIR}/../src/diskimages_private.c
     ${CMAKE_CURRENT_SOURCE_DIR}/mocks.c)
 
-foreach(category attach detach)
+foreach(category attach detach loader print)
     add_executable(test-${category} test_${category}.c ${under_test})
     # fakes/ must be searched before the system headers so framework includes resolve to the stubs.
     target_include_directories(test-${category} BEFORE PRIVATE
