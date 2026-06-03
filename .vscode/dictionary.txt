@@ -5,6 +5,7 @@ buildsystems
 cfstr
 cfurl
 cfurlposix
+cmocka
 cooldown
 coveragerc
 coverallsapp
@@ -16,6 +17,7 @@ diskarbitration
 diskimages
 docstrings
 dyld
+endforeach
 esbenp
 filevault
 foxundermoon
@@ -29,10 +31,12 @@ jinja
 jsonnet
 jsonschema
 lckd
+libc
 libera
 libsecurity
 libsonnet
 libtether
+libtether's
 mktemp
 mypy
 ndif
@@ -56,6 +60,7 @@ shellformat
 snapcraft
 sparsebundle
 sparseimage
+statfs
 tatsh
 teth
 udif
