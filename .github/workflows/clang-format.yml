@@ -1,0 +1,33 @@
+jobs:
+  clang-format:
+    runs-on: 'ubuntu-latest'
+    steps:
+      - uses: 'actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10'
+        with:
+          persist-credentials: false
+      - name: 'Check formatting (clang-format)'
+        run: 'clang-format --dry-run include/*.h src/*.c tools/*.c'
+name: 'clang-format'
+'on':
+  pull_request:
+    branches:
+      - 'master'
+    paths:
+      - '**/*.c'
+      - '**/*.cc'
+      - '**/*.cpp'
+      - '**/*.h'
+      - '**/*.hpp'
+      - '.github/workflows/clang-format.yml'
+  push:
+    branches:
+      - 'master'
+    paths:
+      - '**/*.c'
+      - '**/*.cc'
+      - '**/*.cpp'
+      - '**/*.h'
+      - '**/*.hpp'
+      - '.github/workflows/clang-format.yml'
+permissions:
+  contents: 'read'
