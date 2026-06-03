@@ -8,6 +8,7 @@
       "CITATION.cff",
       "CMakeLists.txt",
       "README.md",
+      "include/libtether.h",
       "package.json",
       "vcpkg.json"
     ],

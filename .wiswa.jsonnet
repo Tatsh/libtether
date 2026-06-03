@@ -13,6 +13,12 @@
   // No WinGet publishing; this is a macOS-only project.
   want_winget: false,
   clang_format_args: 'include/*.h src/*.c tools/*.c tests/*.c tests/*.h',
+  // Keep LIBTETHER_VERSION in the public header in sync on release bumps.
+  cz+: {
+    commitizen+: {
+      version_files+: ['include/libtether.h'],
+    },
+  },
   vcpkg+: {
     dependencies+: ['cmocka'],
   },
