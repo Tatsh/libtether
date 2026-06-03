@@ -15,14 +15,16 @@ option(BUILD_TOOLS "Build the attach-dmg and detach-dmg command-line tools" OFF)
 option(BUILD_TESTS "Build the mocked unit tests" OFF)
 # Instrument the tests with --coverage (gcov) for Coveralls reporting in CI.
 option(ENABLE_COVERAGE "Build the tests with coverage instrumentation" OFF)
+# Build the Doxygen documentation with -DBUILD_DOCS=ON (used by the GitHub Pages workflow).
+option(BUILD_DOCS "Build the Doxygen documentation" OFF)
 
 # ---------------------------------------------------------------------------
 # Platform guard: the library and tools use macOS frameworks (DiskArbitration, CoreFoundation,
-# IOKit) and the private DiskImages.framework, so they only build on macOS. The tests do not, so a
-# non-Apple configure is allowed when BUILD_TESTS is on.
+# IOKit) and the private DiskImages.framework, so they only build on macOS. The tests and the docs
+# do not, so a non-Apple configure is allowed when BUILD_TESTS or BUILD_DOCS is on.
 # ---------------------------------------------------------------------------
-if(NOT APPLE AND NOT BUILD_TESTS)
-    message(FATAL_ERROR "libtether targets macOS only (requires DiskArbitration and the private DiskImages.framework). Configure with -DBUILD_TESTS=ON to build the mocked tests off-platform.")
+if(NOT APPLE AND NOT BUILD_TESTS AND NOT BUILD_DOCS)
+    message(FATAL_ERROR "libtether targets macOS only (requires DiskArbitration and the private DiskImages.framework). Configure with -DBUILD_TESTS=ON or -DBUILD_DOCS=ON to build off-platform.")
 endif()
 
 # The library (and optional tools) only build on macOS.
@@ -44,4 +46,15 @@ endif()
 if(BUILD_TESTS)
     enable_testing()
     add_subdirectory(tests)
+endif()
+
+# The documentation builds on any platform; the GitHub Pages workflow builds the `docs` target and
+# publishes the generated build/html directory.
+if(BUILD_DOCS)
+    set(DOXYGEN_GENERATE_TAGFILE "${CMAKE_BINARY_DIR}/html/${CMAKE_PROJECT_NAME}.tags")
+    set(DOXYGEN_INTERACTIVE_SVG YES)
+    set(DOXYGEN_MARKDOWN_ID_STYLE GITHUB)
+    set(DOXYGEN_USE_MDFILE_AS_MAINPAGE "${CMAKE_SOURCE_DIR}/README.md")
+    find_package(Doxygen REQUIRED COMPONENTS dot)
+    doxygen_add_docs(docs README.md include src ALL)
 endif()
