@@ -4,7 +4,7 @@
   project_name: 'libtether',
   version: '0.0.1',
   security_policy_supported_versions: { '0.0.x': ':white_check_mark:' },
-  description: 'Tools and a C library to attach and detach macOS disk images, replicating hdiutil via the private DiskImages framework and DiskArbitration.',
+  description: 'Programmatically attach a DMG without a hdiutil subprocess.',
   keywords: ['dmg', 'disk image', 'diskarbitration', 'diskimages', 'hdiutil', 'macos'],
   want_main: false,
   // The tests are C/cmocka, not the Python suite wiswa would scaffold; tests.yml is maintained by

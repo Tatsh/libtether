@@ -8,9 +8,9 @@
       "CITATION.cff",
       "CMakeLists.txt",
       "README.md",
-      "include/libtether.h",
       "package.json",
-      "vcpkg.json"
+      "vcpkg.json",
+      "include/libtether.h"
     ],
     "version_provider": "npm",
     "version_scheme": "semver"

@@ -1,8 +1,8 @@
 {
   "_wiswa": {
     "commandLine": "wiswa -d",
-    "lastRun": "2026-06-03T17:57:30Z",
-    "version": "51b7c97"
+    "lastRun": "2026-06-04T21:11:47Z",
+    "version": "253303c"
   },
   "contributors": ["Andrew Udvare <audvare@gmail.com>"],
   "cspell": {
@@ -39,7 +39,7 @@
     ],
     "useGitignore": true
   },
-  "description": "Tools and a C library to attach and detach macOS disk images, replicating hdiutil via the private DiskImages framework and DiskArbitration.",
+  "description": "Programmatically attach a DMG without a hdiutil subprocess.",
   "devDependencies": {
     "@prettier/plugin-xml": "^3.4.2",
     "cspell": "^10.0.0",
