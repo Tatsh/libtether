@@ -17,6 +17,14 @@ jobs:
           if-no-files-found: 'error'
           name: 'libtether-${{ matrix.arch.name }}'
           path: 'build/*.zip'
+      - if: "${{ github.ref_type == 'tag' }}"
+        name: 'Upload package to release'
+        env:
+          GH_TOKEN: '${{ github.token }}'
+          TAG: '${{ github.ref_name }}'
+        run: |
+          gh release create "$TAG" --draft --generate-notes --title "$TAG" || true
+          gh release upload "$TAG" build/*.zip --clobber
     strategy:
       fail-fast: false
       matrix:
@@ -47,5 +55,7 @@ name: 'CMake'
       - 'include/**'
       - 'src/**'
       - 'tools/**'
+    tags:
+      - 'v*.*.*'
 permissions:
-  contents: 'read'
+  contents: 'write'
