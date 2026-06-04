@@ -24,6 +24,7 @@ diskimages
 docstrings
 dyld
 endforeach
+esac
 esbenp
 filevault
 foxundermoon
@@ -73,6 +74,7 @@ statfs
 tagfile
 tatsh
 teth
+tostring
 udif
 udvare
 undraft
