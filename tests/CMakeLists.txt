@@ -61,6 +61,7 @@ foreach(category attach detach loader print)
     target_include_directories(test-${category} BEFORE PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/fakes
         ${CMAKE_CURRENT_SOURCE_DIR}/../include
+        ${CMAKE_CURRENT_SOURCE_DIR}/../src
         ${CMAKE_CURRENT_SOURCE_DIR})
     # cmocka 2.x deprecates the generic check_expected; silence that one warning.
     target_compile_options(test-${category} PRIVATE -Wno-deprecated-declarations)
