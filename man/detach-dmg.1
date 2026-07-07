@@ -1,0 +1,102 @@
+.TH DETACH-DMG 1 "2026-07-07" "libtether 0.0.1" "libtether Manual"
+.SH NAME
+detach\-dmg \- detach (unmount and eject) a disk image, like \fBhdiutil detach\fR
+.SH SYNOPSIS
+.B detach\-dmg
+.RB [ \-force ]
+.RB [ \-timeout
+.IR seconds ]
+.I target
+.br
+.B detach\-dmg
+.RB { \-h | \-help }
+.SH DESCRIPTION
+.B detach\-dmg
+detaches a previously attached disk image, unmounting its volumes and tearing down the backing
+device, exactly as
+.B hdiutil detach
+does. It resolves
+.I target
+to its whole disk and then performs a whole-disk
+.B DADiskUnmount
+followed by
+.B DADiskEject
+through the public DiskArbitration.framework, mirroring hdiutil's
+.I unmount_and_eject
+path.
+.PP
+.I target
+may be a BSD device name
+.RI ( disk4 ),
+a
+.I /dev
+path
+.RI ( /dev/disk4 ", " /dev/disk4s1 ", " /dev/rdisk4s1 ),
+or a mount point
+.RI ( /Volumes/Foo ).
+A partition specification still detaches the whole disk.
+.SH OPTIONS
+.TP
+.B \-force
+Force the unmount, unmounting even if the volume is in use.
+.TP
+.BI \-timeout " seconds"
+Upper bound, in seconds, on the wait for each DiskArbitration callback. A value less than or equal
+to zero selects a sane default.
+.TP
+.BR \-h ", " \-help
+Print a usage message and exit.
+.SH EXIT STATUS
+.TP
+.B 0
+The image was detached successfully.
+.TP
+.B 2
+Command-line usage error (no target, an unknown option,
+.B \-timeout
+without an argument, or more than one target).
+.TP
+.RB "other (" 1 \(en 255 )
+Detach failed; a positive value in that range is the
+.B DADissenter
+status code, otherwise the failure is reported as
+.BR 1 .
+.SH EXAMPLES
+.PP
+Detach by BSD name:
+.RS
+.EX
+detach\-dmg disk4
+.EE
+.RE
+.PP
+Detach by a partition
+.I /dev
+path (still detaches the whole disk):
+.RS
+.EX
+detach\-dmg /dev/disk4s1
+.EE
+.RE
+.PP
+Detach by mount point:
+.RS
+.EX
+detach\-dmg /Volumes/Foo
+.EE
+.RE
+.PP
+Force the unmount with a 60-second callback timeout:
+.RS
+.EX
+detach\-dmg \-force \-timeout 60 disk4
+.EE
+.RE
+.SH NOTES
+.B macOS only.
+.SH SEE ALSO
+.BR attach\-dmg (1),
+.BR hdiutil (1),
+.BR libtether.h (3)
+.SH AUTHOR
+Andrew Udvare

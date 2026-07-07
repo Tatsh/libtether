@@ -1,0 +1,212 @@
+.TH LIBTETHER.H 3 "2026-07-07" "libtether 0.0.1" "libtether Library Functions"
+.SH NAME
+libtether.h \- public interface of libtether: attach and detach macOS disk images
+.SH SYNOPSIS
+.nf
+.B #include <libtether.h>
+.PP
+.B #define LIBTETHER_VERSION "0.0.1"
+.PP
+.B typedef struct {
+.RS
+.B bool read_only;
+.B bool skip_verify;
+.B bool verbose;
+.B bool quiet;
+.RE
+.B } teth_attach_options;
+.PP
+.BI "int teth_attach(const char *" image_path ,
+.BI "                const teth_attach_options *" opts ,
+.BI "                CFDictionaryRef *" out_results );
+.PP
+.BI "void teth_print_attach_results(CFDictionaryRef " results );
+.PP
+.BI "int teth_detach(const char *" dev_or_mount ,
+.BI "                bool " force ,
+.BI "                double " timeout_seconds );
+.fi
+.PP
+Link with the DiskArbitration, CoreFoundation, and IOKit frameworks; the private
+DiskImages.framework is resolved at run time via
+.BR CFBundle .
+.SH DESCRIPTION
+.B libtether
+tethers a disk image to the running system: attach mounts it as a
+.I /dev/diskN
+device, and detach unmounts and releases it again. It does only those two things \(em there
+is no creation or format manipulation. It replicates what
+.B hdiutil attach
+and
+.B hdiutil detach
+do:
+.IP \(bu 2
+attach uses the private DiskImages.framework
+.RB ( DIHLDiskImageAttach );
+.IP \(bu 2
+detach uses the public DiskArbitration.framework (unmount and eject of the whole disk),
+mirroring hdiutil's
+.I unmount_and_eject
+path.
+.SS Attach options
+The
+.B teth_attach_options
+structure controls how
+.BR teth_attach ()
+mounts an image. Each field maps to an entry hdiutil sets in the DiskImages attach options
+dictionary. A NULL options pointer passed to
+.BR teth_attach ()
+is treated as a read-only attach with verification enabled.
+.TP
+.B bool read_only
+Set the
+.I read-only
+attach option; a plain attach is read-only.
+.TP
+.B bool skip_verify
+Set the
+.I skip-verify
+family of attach options.
+.TP
+.B bool verbose
+Set the
+.I verbose
+attach option.
+.TP
+.B bool quiet
+Set the
+.I quiet
+attach option.
+.SH FUNCTIONS
+.SS teth_attach()
+.BI "int teth_attach(const char *" image_path ", const teth_attach_options *" opts ", CFDictionaryRef *" out_results );
+.PP
+Attach (mount) the disk image at
+.IR image_path .
+Builds the DiskImages option dictionary exactly as
+.B hdiutil attach
+does and calls
+.BR DIHLDiskImageAttach .
+Works for any image format DiskImages recognises (UDIF
+.IR .dmg ,
+.IR .sparseimage ,
+.IR .sparsebundle ,
+.IR .iso / .cdr ,
+NDIF, encrypted), not just
+.IR .dmg .
+.TP
+.I image_path
+Filesystem path to the disk image. May be a regular file or, for a
+.IR .sparsebundle ,
+a directory.
+.TP
+.I opts
+Attach options, or NULL for the defaults (read-only, verified).
+.TP
+.I out_results
+If non-NULL, receives a retained
+.B CFDictionaryRef
+on success: the attach result whose
+.I system-entities
+key is a
+.B CFArray
+of
+.RI { dev-entry ", " mount-point ", " content-hint }
+dictionaries. The caller takes ownership and must release it with
+.BR CFRelease ().
+.PP
+On success the DiskImages framework is left loaded for the lifetime of the process so that the
+attached device outlives this call.
+.SS teth_print_attach_results()
+.BI "void teth_print_attach_results(CFDictionaryRef " results );
+.PP
+Print the
+.I system-entities
+of an attach result to standard output. Writes one line per entity formatted as
+.RI < dev-entry >\et< content-hint >\et< mount-point >,
+matching the spirit of
+.B hdiutil attach
+output. Entities without a mount point (for example a whole-disk partition scheme) print an
+empty mount-point field.
+.TP
+.I results
+An attach result dictionary as produced by
+.BR teth_attach ().
+Passing NULL is a no-op.
+.SS teth_detach()
+.BI "int teth_detach(const char *" dev_or_mount ", bool " force ", double " timeout_seconds );
+.PP
+Detach (unmount and eject) a previously attached image. Resolves
+.I dev_or_mount
+to its whole disk, then performs a whole-disk
+.B DADiskUnmount
+followed by
+.B DADiskEject
+through DiskArbitration, mirroring hdiutil's
+.IR unmount_and_eject .
+Operating on the whole disk tears the image down, equivalent to
+.BR "hdiutil detach" .
+.TP
+.I dev_or_mount
+Target as a BSD device name
+.RI ( disk4 ),
+a
+.I /dev
+path
+.RI ( /dev/disk4 ", " /dev/disk4s1 ", " /dev/rdisk4s1 ),
+or a mount point
+.RI ( /Volumes/Foo ).
+A partition spec still detaches the whole disk.
+.TP
+.I force
+If true, add the force option to the unmount.
+.TP
+.I timeout_seconds
+Upper bound, in seconds, on the wait for each DiskArbitration callback; a value <= 0 selects a
+sane default.
+.SH RETURN VALUE
+.BR teth_attach ()
+returns 0 on success; a non-zero DiskImages status code on attach failure; or a negative value
+for local errors
+.RB ( \-2
+invalid path,
+.B \-3
+DiskImages framework load failure).
+.PP
+.BR teth_detach ()
+returns 0 on success; a non-zero
+.B DADissenter
+status on unmount or eject failure; or a negative value for local errors
+.RB ( \-2
+unparseable target,
+.B \-3
+DiskArbitration session-create failure).
+.PP
+.BR teth_print_attach_results ()
+does not return a value.
+.SH MACROS
+.TP
+.B LIBTETHER_VERSION
+The libtether version string in semantic-versioning form
+.RB ( \(dq0.0.1\(dq ).
+.SH NOTES
+.B macOS only.
+libtether depends on DiskArbitration.framework, CoreFoundation, IOKit, and the private
+DiskImages.framework. The build hard-fails on non-Apple platforms.
+.PP
+Attaching a
+.I .dmg
+is not a DiskArbitration operation: DiskArbitration only mounts, unmounts, and ejects devices
+that already exist, whereas creating the
+.I /dev/diskN
+backing device from an image file is done by the private DiskImages.framework. libtether
+resolves the needed DiskImages symbols at run time with
+.BR CFBundle ,
+because on current macOS private frameworks live in the dyld shared cache with no on-disk stub to
+link against.
+.SH SEE ALSO
+.BR attach-dmg (1),
+.BR detach-dmg (1),
+.BR hdiutil (1)
+.SH AUTHOR
+Andrew Udvare

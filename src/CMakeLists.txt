@@ -37,7 +37,9 @@ target_link_libraries(tether PUBLIC
     ${DISK_ARBITRATION_FRAMEWORK}
     ${IOKIT_FRAMEWORK})
 
-# Install the static library and its public header (from ../include).
+# Install the static library, its public header (from ../include), and the section 3 manpage.
 install(TARGETS tether ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
 install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/../include/libtether.h
     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/../man/libtether.h.3
+    DESTINATION ${CMAKE_INSTALL_MANDIR}/man3)

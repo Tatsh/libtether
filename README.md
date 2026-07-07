@@ -73,7 +73,7 @@ The signature was recovered from three independent sources that all agree:
    Note `inStatusProc` is plain `void *` in Apple's header, `DIInitialize` returns
    `int`, and `DIDeinitialize` returns `void`.
 
-We declare these ourselves in [`include/diskimages_private.h`](include/diskimages_private.h)
+We declare these ourselves in [`src/diskimages_private.h`](src/diskimages_private.h)
 and resolve them at runtime via `CFBundle` (see below).
 
 #### Options dictionary (keys verified verbatim in `hdiutil`'s strings)
@@ -168,12 +168,16 @@ which additionally produces `build/attach-dmg` and `build/detach-dmg`.
 native/
 ├── CMakeLists.txt              # project, options, add_subdirectory(src/tools)
 ├── include/
-│   ├── libtether.h             # public library API
-│   └── diskimages_private.h    # reverse-engineered private DiskImages decls
+│   └── libtether.h             # public library API
+├── man/
+│   ├── libtether.h.3           # library API man page
+│   ├── attach-dmg.1            # attach-dmg CLI man page
+│   └── detach-dmg.1            # detach-dmg CLI man page
 ├── src/
 │   ├── CMakeLists.txt           # builds libtether (always)
 │   ├── teth_attach.c            # attach via DIHLDiskImageAttach
 │   ├── teth_detach.c            # detach via DiskArbitration unmount+eject
+│   ├── diskimages_private.h    # reverse-engineered private DiskImages decls
 │   └── diskimages_private.c     # CFBundle loader for DiskImages.framework
 └── tools/
     ├── CMakeLists.txt           # builds attach-dmg/detach-dmg (BUILD_TOOLS=ON)

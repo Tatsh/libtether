@@ -9,6 +9,11 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [unreleased]
 
+### Added
+
+- Manual pages for the library and both tools (`libtether.h`, `attach-dmg`, and `detach-dmg`),
+  installed under the standard `man1` and `man3` directories.
+
 ## [0.0.1] - 2026-06-03
 
 ### Added

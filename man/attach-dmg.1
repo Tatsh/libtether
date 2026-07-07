@@ -1,0 +1,106 @@
+.TH ATTACH-DMG 1 "2026-07-07" "libtether 0.0.1" "libtether Manual"
+.SH NAME
+attach\-dmg \- attach (mount) a disk image, like \fBhdiutil attach\fR
+.SH SYNOPSIS
+.B attach\-dmg
+.RB [ \-readonly | \-readwrite ]
+.RB [ \-noverify ]
+.RB [ \-quiet ]
+.RB [ \-verbose ]
+.I image
+.br
+.B attach\-dmg
+.RB { \-h | \-help }
+.SH DESCRIPTION
+.B attach\-dmg
+attaches the disk image
+.I image
+to the running system, creating a
+.I /dev/diskN
+device and mounting its volumes, exactly as
+.B hdiutil attach
+does. It hands the image to the private DiskImages.framework
+.RB ( DIHLDiskImageAttach ),
+so it works for any format DiskImages recognises \(em UDIF
+.RI ( .dmg ),
+sparse images
+.RI ( .sparseimage ),
+sparse bundles
+.RI ( .sparsebundle ,
+a directory), ISO or CD masters
+.RI ( .iso ,
+.IR .cdr ),
+NDIF, and encrypted images \(em not just
+.IR .dmg .
+.PP
+On success it prints one line per attached entity to standard output, formatted as:
+.PP
+.RS
+.RI < dev-entry >\et< content-hint >\et< mount-point >
+.RE
+.PP
+Entities without a mount point (for example a whole-disk partition scheme) print an empty
+mount-point field.
+.SH OPTIONS
+.TP
+.B \-readonly
+Attach the image read-only. This is the default.
+.TP
+.B \-readwrite
+Attach the image read-write.
+.TP
+.B \-noverify
+Skip checksum verification of the image before attaching.
+.TP
+.B \-quiet
+Reduce diagnostic output from the DiskImages framework.
+.TP
+.B \-verbose
+Increase diagnostic output from the DiskImages framework.
+.TP
+.BR \-h ", " \-help
+Print a usage message and exit.
+.SH EXIT STATUS
+.TP
+.B 0
+The image was attached successfully.
+.TP
+.B 2
+Command-line usage error (no image, an unknown option, or more than one image).
+.TP
+.RB "other (" 1 \(en 255 )
+Attach failed; a positive value in that range is the DiskImages status code, otherwise the
+failure is reported as
+.BR 1 .
+.SH EXAMPLES
+.PP
+Attach an image read-only (the default):
+.RS
+.EX
+attach\-dmg /path/to/Image.dmg
+.EE
+.RE
+.PP
+Attach a sparse image read-write:
+.RS
+.EX
+attach\-dmg \-readwrite /path/to/Image.sparseimage
+.EE
+.RE
+.PP
+Attach quietly without verifying the checksum:
+.RS
+.EX
+attach\-dmg \-noverify \-quiet /path/to/Image.dmg
+.EE
+.RE
+.SH NOTES
+.B macOS only.
+Attaching some images may require entitlements or administrator rights; run with appropriate
+privileges if attach returns a permission error.
+.SH SEE ALSO
+.BR detach\-dmg (1),
+.BR hdiutil (1),
+.BR libtether.h (3)
+.SH AUTHOR
+Andrew Udvare

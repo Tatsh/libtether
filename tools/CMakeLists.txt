@@ -11,3 +11,7 @@ target_link_libraries(detach-dmg PRIVATE tether)
 
 install(TARGETS attach-dmg detach-dmg
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+install(FILES
+    ${CMAKE_CURRENT_SOURCE_DIR}/../man/attach-dmg.1
+    ${CMAKE_CURRENT_SOURCE_DIR}/../man/detach-dmg.1
+    DESTINATION ${CMAKE_INSTALL_MANDIR}/man1)
