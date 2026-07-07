@@ -33,6 +33,7 @@ gcov
 ghidra
 gmock
 graphviz
+handoff
 includedir
 iokit
 iwyu
@@ -72,6 +73,7 @@ snapcraft
 sparsebundle
 sparseimage
 statfs
+statusline
 tagfile
 tatsh
 teth
