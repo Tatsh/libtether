@@ -48,6 +48,7 @@ libsonnet
 libtether
 libtether's
 mainpage
+mandir
 mdfile
 mktemp
 mypy
