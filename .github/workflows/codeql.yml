@@ -12,7 +12,7 @@ jobs:
         with:
           persist-credentials: false
       - name: 'Initialize CodeQL'
-        uses: 'github/codeql-action/init@cdf488f595d80d6e07e03d4674febd5ab45fa938'
+        uses: 'github/codeql-action/init@b96794f015dfd88f77b49b1c93e0fa7110f94c63'
         with:
           build-mode: '${{ matrix.build-mode }}'
           languages: '${{ matrix.language }}'
@@ -22,7 +22,7 @@ jobs:
           cmake -S . -B build -DBUILD_TOOLS=ON
           cmake --build build
       - name: 'Perform CodeQL Analysis'
-        uses: 'github/codeql-action/analyze@cdf488f595d80d6e07e03d4674febd5ab45fa938'
+        uses: 'github/codeql-action/analyze@b96794f015dfd88f77b49b1c93e0fa7110f94c63'
         with:
           category: '/language:${{ matrix.language }}'
     strategy:
