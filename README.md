@@ -7,11 +7,9 @@
 [![License](https://img.shields.io/github/license/Tatsh/libtether)](https://github.com/Tatsh/libtether/blob/master/LICENSE.txt)
 [![GitHub commits since latest release (by SemVer including pre-releases)](https://img.shields.io/github/commits-since/Tatsh/libtether/v0.0.1/master)](https://github.com/Tatsh/libtether/compare/v0.0.1...master)
 [![CodeQL](https://github.com/Tatsh/libtether/actions/workflows/codeql.yml/badge.svg)](https://github.com/Tatsh/libtether/actions/workflows/codeql.yml)
-[![Tests](https://github.com/Tatsh/libtether/actions/workflows/tests.yml/badge.svg)](https://github.com/Tatsh/libtether/actions/workflows/tests.yml)
-[![Coverage Status](https://coveralls.io/repos/github/Tatsh/libtether/badge.svg?branch=master)](https://coveralls.io/github/Tatsh/libtether?branch=master)
 [![Dependabot](https://img.shields.io/badge/Dependabot-enabled-blue?logo=dependabot)](https://github.com/dependabot)
 [![Stargazers](https://img.shields.io/github/stars/Tatsh/libtether?logo=github&style=flat)](https://github.com/Tatsh/libtether/stargazers)
-[![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit)](https://github.com/pre-commit/pre-commit)
+[![pre-commit.ci status](https://results.pre-commit.ci/badge/github/Tatsh/libtether/master.svg)](https://results.pre-commit.ci/latest/github/Tatsh/libtether/master)
 [![CMake](https://img.shields.io/badge/CMake-6E6E6E?logo=cmake)](https://cmake.org/)
 [![Prettier](https://img.shields.io/badge/Prettier-black?logo=prettier)](https://prettier.io/)
 

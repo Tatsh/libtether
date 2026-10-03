@@ -1,4 +1,3 @@
-Ångström
 bindir
 bsky
 buildsystems
@@ -7,7 +6,6 @@ cfurl
 cfurlposix
 cmocka
 commitizen
-cooldown
 coveragerc
 coverallsapp
 cpack
@@ -54,7 +52,9 @@ mdfile
 mktemp
 mypy
 ndif
+noone
 noverify
+numpydoc
 oneline
 preapproved
 proc
@@ -86,10 +86,11 @@ unparseable
 vendored
 venv
 volname
+werror
 wextra
 winget
 wiswa
 wiswa's
-worktree
 yarnrc
 zizmor
+Ångström
