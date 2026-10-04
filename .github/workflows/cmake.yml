@@ -1,12 +1,21 @@
+concurrency:
+  cancel-in-progress: false
+  group: '${{ github.workflow }}-${{ github.ref }}'
+  queue: 'max'
 jobs:
   build:
+    name: 'Build'
+    permissions:
+      contents: 'write'
     runs-on: '${{ matrix.arch.runner }}'
     steps:
       - uses: 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1'
         with:
           persist-credentials: false
-      - name: 'Configure'
-        run: 'cmake -S . -B build -DBUILD_TOOLS=ON -DCMAKE_BUILD_TYPE=Release -DCPACK_SYSTEM_NAME=${{ matrix.arch.cpack_system }}'
+      - env:
+          CPACK_SYSTEM: '${{ matrix.arch.cpack_system }}'
+        name: 'Configure'
+        run: 'cmake -S . -B build -DBUILD_TOOLS=ON -DCMAKE_BUILD_TYPE=Release -DCPACK_SYSTEM_NAME="$CPACK_SYSTEM"'
       - name: 'Build'
         run: 'cmake --build build --config Release'
       - name: 'Package'
@@ -57,5 +66,4 @@ name: 'CMake'
       - 'tools/**'
     tags:
       - 'v*.*.*'
-permissions:
-  contents: 'write'
+permissions: {}

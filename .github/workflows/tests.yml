@@ -1,5 +1,9 @@
+concurrency:
+  cancel-in-progress: true
+  group: '${{ github.workflow }}-${{ github.event.pull_request.number || github.sha }}'
 jobs:
   coverage:
+    name: 'Coverage'
     runs-on: 'ubuntu-latest'
     steps:
       - uses: 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1'
@@ -24,6 +28,7 @@ jobs:
           format: 'lcov'
           github-token: '${{ secrets.GITHUB_TOKEN }}'
   test:
+    name: 'Test'
     runs-on: 'ubuntu-latest'
     steps:
       - uses: 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1'
@@ -31,8 +36,10 @@ jobs:
           persist-credentials: false
       - name: 'Install cmocka'
         run: 'sudo apt-get update && sudo apt-get install --no-install-recommends -y libcmocka-dev'
-      - name: 'Configure'
-        run: 'cmake -S . -B build -DBUILD_TESTS=ON -DCMAKE_C_COMPILER=${{ matrix.compiler }}'
+      - env:
+          COMPILER: '${{ matrix.compiler }}'
+        name: 'Configure'
+        run: 'cmake -S . -B build -DBUILD_TESTS=ON -DCMAKE_C_COMPILER="$COMPILER"'
       - name: 'Build'
         run: 'cmake --build build'
       - name: 'Test'
