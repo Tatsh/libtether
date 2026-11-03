@@ -61,6 +61,7 @@ noverify
 numpydoc
 oneline
 pathlib
+pipefail
 pipx
 preapproved
 proc
@@ -98,6 +99,7 @@ wextra
 winget
 wiswa
 wiswa's
+xcrun
 yarnrc
 zizmor
 Ångström
