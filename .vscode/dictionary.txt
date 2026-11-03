@@ -1,3 +1,4 @@
+analyzer
 bindir
 bsky
 buildsystems
@@ -21,6 +22,7 @@ diskarbitration
 diskimages
 docstrings
 dyld
+elif
 endforeach
 esac
 esbenp
@@ -34,6 +36,7 @@ graphviz
 handoff
 includedir
 iokit
+iterdir
 iwyu
 jinja
 jsonnet
@@ -52,10 +55,12 @@ mdfile
 mktemp
 mypy
 ndif
+nojekyll
 noone
 noverify
 numpydoc
 oneline
+pathlib
 pipx
 preapproved
 proc

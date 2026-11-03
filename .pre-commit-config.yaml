@@ -58,7 +58,7 @@ repos:
   - hooks:
       - id: 'zizmor'
     repo: 'https://github.com/zizmorcore/zizmor-pre-commit'
-    rev: 'v1.31.1'
+    rev: 'v1.32.0'
   - hooks:
       - id: 'validate-cff'
     repo: 'https://github.com/citation-file-format/cffconvert'
@@ -79,7 +79,7 @@ repos:
         stages:
           - 'post-checkout'
           - 'post-merge'
-      - entry: 'yarn exec prettier --write'
+      - entry: 'yarn exec prettier --write --ignore-unknown'
         exclude: "((requirements|robots).txt|Dockerfile.*|..*ignore|.(coveragerc|gitattributes)|.*.(csv|lock|resource|robot)|pylock.*\\.toml|CODEOWNERS|py.typed)$"
         exclude_types:
           - 'binary'

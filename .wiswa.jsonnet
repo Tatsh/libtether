@@ -40,3 +40,29 @@
     },
   },
 }
++ {
+  want_scan_build: true,
+  github+: { workflows+: {
+    scan_build+: {
+      configure_command: 'cmake -S . -B build-scan -DCMAKE_BUILD_TYPE=Debug -DBUILD_TOOLS=ON',
+      documentation_steps: [
+        {
+          name: 'Install Doxygen and Graphviz',
+          run: 'sudo apt-get update && sudo apt-get install --no-install-recommends -y doxygen graphviz',
+        },
+        {
+          name: 'Configure',
+          run: 'cmake -S . -B build -DBUILD_DOCS=ON',
+        },
+        {
+          name: 'Build documentation',
+          run: 'cmake --build build --target docs',
+        },
+      ],
+      env: {},
+      runs_on: 'macos-15',
+      setup_steps: [],
+      workflow_file: 'pages.yml',
+    },
+  } },
+}
