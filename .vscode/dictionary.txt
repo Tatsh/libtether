@@ -7,6 +7,7 @@ cfurl
 cfurlposix
 cmocka
 commitizen
+copytree
 coveragerc
 coverallsapp
 cpack
@@ -36,7 +37,6 @@ graphviz
 handoff
 includedir
 iokit
-iterdir
 iwyu
 jinja
 jsonnet
@@ -73,10 +73,12 @@ readwrite
 reflow
 regen
 ripgreprc
+rmtree
 sbclaude
 schemafile
 shellcheck
 shellformat
+shutil
 snapcraft
 sparsebundle
 sparseimage
