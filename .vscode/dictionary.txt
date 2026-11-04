@@ -69,11 +69,13 @@ pyinstaller
 pylock
 pyproject
 rdisk
+rdparty
 readwrite
 reflow
 regen
 ripgreprc
 rmtree
+sarif
 sbclaude
 schemafile
 shellcheck

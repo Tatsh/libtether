@@ -66,3 +66,4 @@
     },
   } },
 }
++ { static_analysis_paths: ['src', 'tests'] }
