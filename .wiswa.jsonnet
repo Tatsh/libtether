@@ -62,7 +62,6 @@
       env: {},
       runs_on: 'macos-15',
       setup_steps: [],
-      workflow_file: 'pages.yml',
     },
   } },
 }
