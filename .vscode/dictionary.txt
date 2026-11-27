@@ -1,4 +1,3 @@
-analyzer
 bindir
 bsky
 buildsystems
@@ -7,7 +6,6 @@ cfurl
 cfurlposix
 cmocka
 commitizen
-copytree
 coveragerc
 coverallsapp
 cpack
@@ -23,7 +21,6 @@ diskarbitration
 diskimages
 docstrings
 dyld
-elif
 endforeach
 esac
 esbenp
@@ -60,8 +57,6 @@ noone
 noverify
 numpydoc
 oneline
-pathlib
-pipefail
 pipx
 preapproved
 proc
@@ -74,13 +69,11 @@ readwrite
 reflow
 regen
 ripgreprc
-rmtree
 sarif
 sbclaude
 schemafile
 shellcheck
 shellformat
-shutil
 snapcraft
 sparsebundle
 sparseimage
@@ -103,7 +96,6 @@ wextra
 winget
 wiswa
 wiswa's
-xcrun
 yarnrc
 zizmor
 Ångström

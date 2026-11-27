@@ -8,6 +8,7 @@
 [![GitHub commits since latest release (by SemVer including pre-releases)](https://img.shields.io/github/commits-since/Tatsh/libtether/v0.0.1/master)](https://github.com/Tatsh/libtether/compare/v0.0.1...master)
 [![CodeQL](https://github.com/Tatsh/libtether/actions/workflows/codeql.yml/badge.svg)](https://github.com/Tatsh/libtether/actions/workflows/codeql.yml)
 [![Dependabot](https://img.shields.io/badge/Dependabot-enabled-blue?logo=dependabot)](https://github.com/dependabot)
+[![GitHub Pages](https://github.com/Tatsh/libtether/actions/workflows/pages.yml/badge.svg)](https://tatsh.github.io/libtether/)
 [![Stargazers](https://img.shields.io/github/stars/Tatsh/libtether?logo=github&style=flat)](https://github.com/Tatsh/libtether/stargazers)
 [![pre-commit.ci status](https://results.pre-commit.ci/badge/github/Tatsh/libtether/master.svg)](https://results.pre-commit.ci/latest/github/Tatsh/libtether/master)
 [![CMake](https://img.shields.io/badge/CMake-6E6E6E?logo=cmake)](https://cmake.org/)
